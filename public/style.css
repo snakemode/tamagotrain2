@@ -1,0 +1,606 @@
+@font-face {
+	font-family: 'DOTMATRI';
+	src: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2FDOTMATRI.eot?v=1585672843888');
+	src: local('DOTMATRI'), url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2FDOTMATRI.woff?v=1585672843630') format('woff'), url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2FDOTMATRI.ttf?v=1585672843536') format('truetype');
+}
+
+/* Font downloaded from FontsForWeb.com */
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: 'DOTMATRI';
+  font-size: 1.3em;
+}
+
+.ably-link {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 110px;
+  color: black;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.powered {
+  display: block;
+  margin-bottom: 10px;
+  text-align: right;
+  font-family: arial, helvetica, sans-serif;
+}
+
+.livedata {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 6px 10px;
+  border: 2px solid black;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+  background-color: white;
+  font-family: arial, helvetica, sans-serif;
+  cursor: pointer;
+}
+
+.livedata:hover {
+  background-color: #ebc8e2;
+}
+
+h1 {
+  position: relative;
+  font-family: 'DOTMATRI';
+  font-size: 48px;
+  text-align: center;
+  color: #3cacd3;
+  letter-spacing: -2px;
+  -webkit-text-stroke: 8px white;
+  text-stroke: 8px white;
+}
+
+h1:after {
+  content: "Tamago-train!";
+  position: absolute;
+  font-size: 48px;
+  color: #3cacd3;
+  top: 0px;
+  left: calc(50%);
+  width: max-content;
+  transform: translate(-50%, 0);
+   -webkit-text-stroke: 0;
+  text-stroke: 0;
+}
+
+main {
+  flex-shrink: 0;
+  max-width: 620px;
+  margin: 0 auto;
+  position: relative;
+  background-size: 680px;
+}
+
+#assets {
+  display: none;
+}
+
+#timetable {
+  background: red;
+  display: none;
+}
+
+#playfield {
+  position: relative;
+  overflow: hidden;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: 15px;
+  background-color: #7b7a82;
+}
+
+#playfield:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0px -2px 5px 2px rgba(0,0,0,0.5);
+}
+
+#track {
+  position:relative;
+  width: calc(100% - 15px);
+  height: 160px;
+  margin-left: 15px;
+  background: rgb(211,204,126);
+  background: linear-gradient(180deg, rgba(211,204,126,1) 70%, rgba(24,44,42,1) 30%);
+  overflow: hidden;
+}
+
+.train {
+  position: relative;
+  width: 700px;
+  height: 240px;
+  transform: translate(100%, -5px);
+  animation: slide 2s forwards;
+}
+
+.doorsOpenLeft {
+  animation: openDoorLeft 2s 1 forwards;
+}
+
+@keyframes openDoorLeft {
+  0%   { transform: scaleX(1);  }
+  50%  { transform: scaleX(0.9);  }
+  100% { transform: scaleX(0.7); }
+}
+
+
+.slideOut {  
+  animation: slideout 2s forwards;
+}
+
+@keyframes slide {
+  30%  { transform: translate(10px, -5px);  }
+  100%  { transform: translate(10px, -5px);  }
+}
+
+@keyframes slideout {
+  0%   { transform: translate(10px, -5px);  }
+  100% { transform: translate(-110%, -5px); }
+}
+
+
+.tunnel {
+  position: absolute;
+  height: 70%;
+  width: 40px;
+  background: url(https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Ftunnel.svg?v=1584637517924) no-repeat;
+  background-size: contain;
+}
+
+
+#platform {
+  position: relative;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  height: 200px;
+  background-color: #a7a5b3;
+  border-top: 10px solid white;
+}
+
+#platform:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 8px; 
+  top: 10px;
+  background-color: #faea38;
+}
+
+.turnstyle {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  height: 120px;
+  z-index: 5999;
+}
+
+#temperatureOverlay {
+  position: absolute;
+  z-index: 9000;
+  width: 100%;
+  height: 600px;
+  opacity: 30%;
+  background: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fzig2.gif?v=1584886862494');
+  background-size: 450%;
+  filter: blur(2px);
+  animation: haze 4s infinite linear;
+  transform: translate(0, -10px);
+  pointer-events: none;
+}
+
+.page-header {
+  height: 100vh;
+  background-image: url("/path/to/image.jpg");
+}
+
+.page-header:after {
+  animation: grain 8s steps(10) infinite;
+  background-image: url("/path/to/grainy/image.jpg");
+  content: "";
+  height: 300%;
+  left: -50%;
+  opacity: 0.3;
+  position: fixed;
+  top: -100%;
+  width: 300%;
+  transform: translate(0, -30px);
+}
+
+@keyframes grain {
+  0%, 100% { transform:translate(0, 0) }
+  10% { transform:translate(-5%, -10%) }
+  20% { transform:translate(-15%, 5%) }
+  30% { transform:translate(7%, -25%) }
+  40% { transform:translate(-5%, 25%) }
+  50% { transform:translate(-15%, 10%) }
+  60% { transform:translate(15%, 0%) }
+  70% { transform:translate(0%, 15%) }
+  80% { transform:translate(3%, 35%) }
+  90% { transform:translate(-10%, 10%) }
+}
+
+
+@keyframes haze {
+  100% { transform: translate(0, -70px); }
+}
+
+#buffs {
+  position: absolute;
+  top: 40%;
+  right: 0px;
+  width: 100%;
+  height: 60%;
+  padding: 10px;
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex-wrap: wrap
+}
+
+.buff {
+  width: 100px;
+  height: 100px;
+}
+
+.VentBuff {
+  background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Ffan.gif?v=1584729355158');
+  background-size: contain;
+}
+
+.CleanBuff {
+  position: absolute;
+  top: 15px;
+  left: 100%;
+  background: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fwash.svg?v=1584966412858') repeat-y;
+  height: 210px;
+  width: 500px;
+  background-size: 100px;
+  animation: clean 5s linear;
+  transform: translate(0px, 0);
+}
+
+.MusicBuff {
+  background: url("https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fflute.gif?v=1585265878222") no-repeat;
+  background-size: contain;
+  margin-top: 10px;
+}
+
+@keyframes clean {
+  100% { transform: translate(-3000px, 0); }
+}
+
+.gameover {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 40px;
+    text-align: center;
+    color: white;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 10000;
+}
+
+.game-over-failure-2:after {
+    content: "";
+    width: 200px;
+    height: 168px;
+    background: url(https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fpoop.gif?v=1585311870021) no-repeat;
+    background-size: cover;
+}
+
+.game-over-failure-0:after {
+    content: "";
+    margin-top: 40px;
+    width: 140px;
+    height: 140px;
+    background: url(https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Ffire.gif?v=1585243320673) no-repeat;
+    background-size: contain;
+}
+
+.game-over-failure-1:after {
+    content: "";
+    margin-top: 0px;
+    width: 140px;
+    height: 160px;
+    background: url(https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fice.gif?v=1585310595796) no-repeat;
+    background-size: contain;
+}
+
+.gameover-text {
+  margin-top: 10px;
+  font-family: 'DOTMATRI';
+  font-size: 30px;
+  line-height: 1.3em;
+}
+
+.hide {
+  display: none;
+}
+
+.entity {
+  width: 10px;
+  height: 10px;
+  background: red;
+}
+
+.trash {
+  width: 100px;
+  height: 100px;
+  background: none;
+  background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Ftrash.png?v=1584724437085');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.trash2 {
+  background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fpoop.svg?v=1584985066193');
+  background-size: 30px;
+}
+
+.mouse {
+  width: 50px;
+  height: 27px;
+  background: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Frat.gif?v=1585242774439') no-repeat bottom;
+  background-size: contain;
+}
+
+div[data-ispassedout="true"] {
+  filter: grayscale(100%) sepia(100%) hue-rotate(90deg);
+}
+
+.traveller {
+  width: 70px;
+  height: 70px;
+  background: none;
+  background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Ftrainagotchi.gif?v=1584659771420');
+  background-size: contain;
+  z-index: 1;
+}
+
+/* birb */
+.traveller0 {
+    background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Ftrainagotchi.gif?v=1584659771420');
+}
+.traveller0[data-ispassedout="true"]{
+  background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fbirbfaint.gif?v=1585227806957')
+}
+.traveller0[data-dancing="true"] {
+   background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fbirbdance.gif?v=1585318633191')
+}
+
+/* blob */
+.traveller1 {
+    background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fblobi.gif?v=1584714913877');
+}
+.traveller1[data-ispassedout="true"]{
+  background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fblobfaint.gif?v=1585233030104')
+}
+.traveller1[data-dancing="true"] {
+   background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fblobdance.gif?v=1585670839048')
+}
+
+/* kitty */
+.traveller2 {
+    background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fkitty.gif?v=1584717567046');
+}
+.traveller2[data-ispassedout="true"]{
+  background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Ffaintkitty.gif?v=1585228510876')
+}
+.traveller2[data-dancing="true"] {
+   background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fkittydance.gif?v=1585670943271')
+}
+
+.traveller3 {
+    background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fpika2.gif?v=1584717580600');
+}
+.traveller3[data-ispassedout="true"]{
+  background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fpikafaint.gif?v=1585233180148')
+}
+.traveller3[data-dancing="true"] {
+   background-image: url('https://cdn.glitch.com/0993a1dd-56b8-4a95-8ad8-5383c9b59d24%2Fpikadance.gif?v=1585670967286')
+}
+
+
+.buttons {
+  display: grid;
+  grid-template: 
+    "button1 button2 button3"
+    "label1 label2 label3";
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 20px auto;
+}
+
+.button {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border: 0;
+  border-radius: 50%;
+  color: #3cacd3;
+  background-color: #3cacd3;
+  cursor: pointer;
+  box-shadow: 0px 2px 2px 2px rgba(0,0,0,0.75);
+}
+
+.button:hover {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.button:nth-of-type(1) {
+  grid-area: button1;
+}
+.button:nth-of-type(2) {
+  grid-area: button2;
+  margin-top: 20px;
+}
+.button:nth-of-type(3) {
+  grid-area: button3;
+}
+
+.button:after {
+  content: "";
+    position: absolute;
+    top: 4px;
+    left: 7px;
+    display: block;
+    width: 60px;
+    height: 60px;
+    box-shadow: inset -4px 2px 0 -2px rgba(2255,255,255,0.5);
+    border-radius: 50%;
+}
+
+.label {
+  text-align: center;
+  font-family: 'DOTMATRI';
+  font-size: 1.3em;
+  text-transform: uppercase;
+  z-index: 1;
+  transform: translate(0, -5px);
+}
+.label:nth-of-type(1) {
+  grid-area: label1;
+}
+.label:nth-of-type(2) {
+  grid-area: label2;
+  margin-top: 20px;
+}
+.label:nth-of-type(3) {
+  grid-area: label3;
+}
+
+/* train */
+
+.st0{fill:#E8E9E8;}
+.st1{fill:#FFFFFF;}
+.st2{fill:#233688;}
+.st3{fill:#676770;}
+.st4{fill:#C4D3EC;}
+.st5{fill:#C21109;}
+.st6{fill:#9EB4D7;}
+.st7{fill:#C3D4EB;}
+.st8{fill:#8799BE;}
+.st9{fill:#D4D4D4;}
+.st10{fill:#9B9B9B;}
+.st11{fill:#BABABA;}
+.st12{fill:#DDDDDD;}
+.st13{fill:#F3E715;}
+.st14{fill:#333333;}
+.st15{fill:#E1EEFB;}
+.st16{fill:#D22724;}
+
+.arrival .door-left {
+  animation: open-left 2.5s ease-out;
+  animation-delay: 1.6s;
+  animation-fill-mode: forwards;
+} 
+
+.arrival .door-right {
+  animation: open-right 2.5s ease-out;
+  animation-delay: 1.6s;
+  animation-fill-mode: forwards;
+} 
+
+.close .door-left {
+  animation: close-left 2.5s ease-in;
+}
+
+.close .door-right {
+  animation: close-right 2.5s ease-in;
+ 
+} 
+
+@keyframes open-left {
+  0% {	transform: translate(0, 0); }
+  100% {	transform: translate(-220px, 0); }
+}
+@keyframes open-right {
+  0% { transform: translate(0, 0); }
+  100% {	transform: translate(220px, 0); }
+}
+
+@keyframes close-left {
+  0% {	transform: translate(-220px, 0); }
+  100% {	transform: translate(0, 0); }
+}
+@keyframes close-right {
+  0% { transform: translate(220px, 0); }
+  100% {	transform: translate(0, 0); }
+}
+
+@media (min-width: 700px) {
+  main {
+    padding: 0 60px;
+  }
+  
+  main:before {
+      content: "";
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      display: block;
+      width: 721px;
+      height: 840px;
+      margin: 0 auto;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      background-color: #ebc8e2;
+      transform: translate(-50%, 0);
+      box-shadow: inset 0px -30px 60px 0px #b675a6;
+  }
+  #playfield {
+    min-width: 500px;
+  }
+}
+
+.social {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+}
+
+.social-title {
+  margin: 0;
+  font-weight: normal;
+  font-size: 16px;
+  font-family: arial, helvetica, sans-serif;
+}
+
+.counter {
+  display: none;
+}
