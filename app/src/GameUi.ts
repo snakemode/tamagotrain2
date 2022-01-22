@@ -1,11 +1,19 @@
 import { game as _game, problems } from "./Config";
-const fps = _game.fps;
-const hot = problems.heat.heatOverlayDisplaysAt;
+import Game from "./Game";
 import { rand } from "./utils";
 
-class GameUi {
+const fps = _game.fps;
+const hot = problems.heat.heatOverlayDisplaysAt;
 
-  constructor(initialState) {
+class GameUi {
+  public track: HTMLElement;
+  public platform: HTMLElement;
+  public playfield: HTMLElement;
+
+  private _lastState: string;
+  private _renderingFunctions: ((currentGameState: any, previousGameState: any) => void)[];
+
+  constructor(initialState: Game) {
     this.playfield = document.getElementById("playfield");
     this.track = document.getElementById("track");
     this.platform = document.getElementById("platform");
@@ -120,7 +128,7 @@ function renderTemperature(currentGameState, previousGameState) {
   const overlay = document.getElementById("temperatureOverlay");
   if (anyPlatformTooHot) {
     overlay.classList.remove("hide");
-    overlay.style.opacity = currentGameState.platforms[0].temperature - 10;
+    overlay.style.opacity = (currentGameState.platforms[0].temperature - 10).toString();
   } else {
     overlay.classList.add("hide");
   }
@@ -207,7 +215,7 @@ function renderContents(currentGameState, previousGameState) {
       gfxTarget.style.position = "absolute";
 
       if (entity.constructor.name == "Trash") {
-        gfxTarget.style.zIndex = 20;
+        gfxTarget.style.zIndex = (20).toString();
       }
     }
   }

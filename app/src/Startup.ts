@@ -4,7 +4,9 @@ import GameUi from "./GameUi";
 import AblyTrainArrivalsClient from "./AblyTrainArrivalsClient";
 import SimulatedTrainArrivalsClient from "./SimulatedTrainArrivalsClient";
 
-let game, ui, dataSource;
+let game: Game;
+let ui: GameUi;
+let dataSource: AblyTrainArrivalsClient | SimulatedTrainArrivalsClient;
 
 export default async function startGame(useRealData = false) {
   if (game) {

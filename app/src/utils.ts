@@ -6,9 +6,7 @@ export function uuidv4() {
 }
 
 export function rand(start, end) {
-  const result = Math.floor(Math.random() * end) + start;
-  // console.log(`rand(${start},${end}) = ${result}`);
-  return result;
+  return Math.floor(Math.random() * end) + start;
 }
 
 export default { uuidv4, rand };
