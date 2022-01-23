@@ -1,8 +1,8 @@
-import Game from "./src/Game";
-import GameUi from "./src/GameUi";
-import AblyTrainArrivalsClient from "./src/datasources/AblyTrainArrivalsClient";
-import SimulatedTrainArrivalsClient from "./src/datasources/SimulatedTrainArrivalsClient";
-import IDataSource from "./src/datasources/IDataSource";
+import Game from "./Game";
+import GameUi from "./ui/GameUi";
+import AblyTrainArrivalsClient from "./datasources/AblyTrainArrivalsClient";
+import SimulatedTrainArrivalsClient from "./datasources/SimulatedTrainArrivalsClient";
+import IDataSource from "./datasources/IDataSource";
 
 console.log("Oh hai! 🖤");
 

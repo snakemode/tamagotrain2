@@ -1,7 +1,7 @@
-import Game from "./Game";
-import { game as _game, problems } from "./Config";
-import { rand } from "./utils";
-import { IGameEntity } from "./entities/IGameEntity";
+import Game from "../Game";
+import { game as _game, problems } from "../Config";
+import { rand } from "../utils";
+import { IGameEntity } from "../entities/IGameEntity";
 
 const fps = _game.fps;
 const hot = problems.heat.heatOverlayDisplaysAt;

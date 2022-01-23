@@ -1,9 +1,10 @@
 import { game } from "./Config";
 import Platform from "./entities/Platform";
 import buffs from "./buffs";
-import { nothing } from "./types";
+import { ITickable } from "./traits/ITickable";
 
 const cfg = game;
+const nothing = async () => { };
 
 export default class Game {
   public ticks: number;
@@ -13,8 +14,9 @@ export default class Game {
   public onGameEnd: (state: Game) => void;
 
   private tickInterval: NodeJS.Timer;
-  gameover: { gameover: boolean; message: string; conditionId: string; } | { gameover: boolean; message?: undefined; conditionId?: undefined; };
-  gameovermsg: string;
+
+  public gameover: { gameover: boolean; message: string; conditionId: number; };
+  public gameovermsg: string;
 
   constructor() {
     this.init();
@@ -42,21 +44,23 @@ export default class Game {
     }, 1000 / cfg.ticksPerSecond);
   }
 
-  stop(showGameOver = true) {
+  public stop(showGameOver = true) {
     clearInterval(this.tickInterval);
     this.status = showGameOver ? "ended" : "inactive";
     this.onGameEnd(this);
   }
 
-  tick() {
+  public tick() {
     this.ticks++;
 
     console.log("🕹 Game tick", this.ticks, "Status", this.status, "Queued Actions", this.queuedActions.length);
 
     const gameOverCheck = this.isGameOver();
-    if (gameOverCheck.gameover) {
+    const { gameover, message } = gameOverCheck;
+
+    if (gameover) {
       this.gameover = gameOverCheck;
-      this.gameovermsg = gameOverCheck.message;
+      this.gameovermsg = message;
       console.log("☠ Game ended");
       this.stop();
       return;
@@ -70,10 +74,9 @@ export default class Game {
     }
 
     this.platform.tick(this);
-
   }
 
-  createBuff(name) {
+  private createBuff(name: string): ITickable {
     try {
       return new buffs[name]();
     } catch (ex) {
@@ -81,7 +84,7 @@ export default class Game {
     }
   }
 
-  isGameOver() {
+  private isGameOver() {
     const failureConditions = [
       { condition: (g: Game) => (g.platform.temperature >= cfg.failureConditions.tooHot), message: `It's too hot!<br>Score: ${this.ticks}` },
       { condition: (g: Game) => (g.platform.temperature <= cfg.failureConditions.tooCold), message: `It's too cold!<br>Score: ${this.ticks}` },
@@ -89,14 +92,13 @@ export default class Game {
       { condition: (g: Game) => (g.platform.contents.length >= g.platform.capacity), message: `Your platforms are too full!<br>Score: ${this.ticks}` }
     ];
 
-    for (let index in failureConditions) {
-      const c = failureConditions[index];
-      if (c.condition(this)) {
-        return { gameover: true, message: c.message, conditionId: index };
+    for (let [index, conditionEntry] of failureConditions.entries()) {
+      if (conditionEntry.condition(this)) {
+        return { gameover: true, message: conditionEntry.message, conditionId: index };
       }
     }
 
-    return { gameover: false };
+    return { gameover: false, message: "", conditionId: -1 };
   }
 
   public queueAction(key: string) {

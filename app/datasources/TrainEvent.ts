@@ -1,5 +1,3 @@
-export type Position = { x: number; y: number; };
-
 export interface TrainEvent {
     source: string;
     arrived?: boolean;
@@ -7,7 +5,4 @@ export interface TrainEvent {
     departsInMs?: number;
 }
 
-export const nothing = async () => { };
-
 export type TrainEventCallback = (trainEvent: TrainEvent) => void;
-

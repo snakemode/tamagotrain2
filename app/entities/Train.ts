@@ -6,7 +6,7 @@ import Traveller from "./Traveller";
 
 const cfg = entities.train;
 
-class Train implements ITickable {
+export default class Train implements ITickable {
   public id: string;
   public ticks: number;
   public hasTicked: boolean;
@@ -52,9 +52,4 @@ class Train implements ITickable {
 
     this.hasTicked = true;
   }
-
-  onCompletion(currentGameState: Game) {
-  }
 }
-
-export default Train;

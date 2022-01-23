@@ -1,5 +1,5 @@
-import { TrainEventCallback } from "../types";
 import IDataSource from "./IDataSource";
+import { TrainEventCallback } from "./TrainEvent";
 
 const twelveSeconds = 1000 * 12;
 

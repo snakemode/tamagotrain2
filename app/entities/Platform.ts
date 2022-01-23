@@ -1,9 +1,9 @@
 import Train from "./Train";
 import { entities } from "../Config";
-import { Position, TrainEvent } from "../types";
+import { TrainEvent } from "../datasources/TrainEvent";
 import { ITickable } from "../traits/ITickable";
 import Game from "../Game";
-import { IGameEntity } from "./IGameEntity";
+import { IGameEntity, Position } from "./IGameEntity";
 const cfg = entities.platform;
 
 export default class Platform implements ITickable {
@@ -87,14 +87,14 @@ export default class Platform implements ITickable {
         if (msg.departsInMs) {
           this.train.setDepartureTimeInMs(msg.departsInMs);
         }
+
+        console.log("🚆 Added train.");
       }
 
       if (msg.departed) {
-        if (this.train) {
-          this.train.onCompletion(currentGameState);
-        }
         this.hasTrain = false;
         this.train = null;
+
         console.log("🚆 Removed train.");
       }
     }

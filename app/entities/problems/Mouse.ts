@@ -2,8 +2,8 @@ import { problems } from "../../Config";
 import Problem from "./Problem";
 import { inTargetZone } from "../../traits/Pathfinder";
 import { walkNaturally } from "../../traits/Pathfinder";
-import { Position } from "../../types";
 import Game from "../../Game";
+import { Position } from "../IGameEntity";
 
 const cfg = problems.mouse;
 

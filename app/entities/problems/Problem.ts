@@ -12,12 +12,13 @@ export default abstract class Problem implements ITickable, IGameEntity {
   public isDisplayed: boolean;
   public completed: boolean;
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number) {    
     this.id = uuidv4();
     this.ticks = 0;
     this.x = x;
     this.y = y;
-    console.log("❗ " + this.constructor.name + "(id=" + this.id + ")");
+
+    console.log(`❗ ${this.constructor.name}(id=${this.id})`);
   }
 
   abstract tick(currentGameState: Game): void;

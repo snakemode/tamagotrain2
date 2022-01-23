@@ -1,4 +1,4 @@
-import { entities } from "../Config";
+import { entities } from "../../Config";
 const cfg = entities.traveller;
 import Traveller from "./Traveller";
 import Platform from "./Platform";

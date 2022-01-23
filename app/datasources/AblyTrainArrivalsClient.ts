@@ -1,9 +1,10 @@
 import { Realtime, Types } from 'ably/promises';
-import { nothing, TrainEventCallback } from '../types';
 import IDataSource from './IDataSource';
+import { TrainEventCallback } from './TrainEvent';
 
 const defaultWaitTime = 12000;
 const trainIdleTimeCap = 30000;
+const nothing = async () => { };
 
 export default class AblyTrainArrivalsClient implements IDataSource {
   private _timetableAgeInMs: number;

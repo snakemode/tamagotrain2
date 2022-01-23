@@ -1,5 +1,6 @@
 import { ITickable } from "../traits/ITickable";
-import { Position } from "../types";
+
+export type Position = { x: number; y: number; };
 
 export interface IGameEntity extends Position, ITickable {
     id: string;

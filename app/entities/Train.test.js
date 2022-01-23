@@ -1,4 +1,4 @@
-import { entities } from "../Config";
+import { entities } from "../../Config";
 const cfg = entities.train;
 import Train from "./Train";
 import Platform from "./Platform";
