@@ -33,7 +33,7 @@ export default class Traveller implements ITickable, IGameEntity {
     this.isDisplayed = false;
     this.dancing = false;
 
-    console.log("🕺 Traveller(id=" + this.id + ")");
+    console.log(`🕺 Traveller(id=${this.id})`);
   }
 
   tick(currentGameState: Game) {
