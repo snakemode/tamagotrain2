@@ -1,3 +1,4 @@
+import { TrainEventCallback } from "../types";
 import IDataSource from "./IDataSource";
 
 const twelveSeconds = 1000 * 12;
@@ -5,7 +6,7 @@ const twelveSeconds = 1000 * 12;
 export default class SimulatedTrainArrivalsClient implements IDataSource {
   public interval: any;
   public stopped: boolean;
-  private _callback: any;
+  private _callback: TrainEventCallback;
   private _timeout: any;
 
   constructor(interval: number = twelveSeconds) {
@@ -14,8 +15,8 @@ export default class SimulatedTrainArrivalsClient implements IDataSource {
     console.log("SimulatedTrainArrivalsClient created.");
   }
 
-  public async listenForEvents(id, callback) {
-    console.log("Faking train arrivals for", id);
+  public async listenForEvents(lineId: string, callback: TrainEventCallback) {
+    console.log("Faking train arrivals for", lineId);
 
     this._callback = callback;
     this.simulateSingleTrain();
@@ -43,12 +44,12 @@ export default class SimulatedTrainArrivalsClient implements IDataSource {
 
   private fakeArrival() {
     console.log("Faking train arrival.");
-    this._callback({ line: "platformId1", arrived: true, source: this.constructor.name });
+    this._callback({ arrived: true, source: this.constructor.name });
   }
 
   private fakeDeparture() {
     console.log("Faking train departure.");
-    this._callback({ line: "platformId1", departed: true, source: this.constructor.name });
+    this._callback({ departed: true, source: this.constructor.name });
   }
 
 }

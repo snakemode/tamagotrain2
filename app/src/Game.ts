@@ -1,10 +1,9 @@
 import { game } from "./Config";
 import Platform from "./entities/Platform";
 import buffs from "./buffs";
+import { nothing } from "./types";
 
 const cfg = game;
-const nothing = () => { };
-const asyncNothing = async () => { };
 
 export default class Game {
   public ticks: number;
@@ -32,7 +31,7 @@ export default class Game {
   public async start(options: { onGameStart: any; onGameEnd: any; }) {
     this.init();
 
-    const onStart = options.onGameStart || asyncNothing;
+    const onStart = options.onGameStart || nothing;
     this.onGameEnd = options.onGameEnd || nothing;
     this.status = "active";
 
@@ -84,10 +83,10 @@ export default class Game {
 
   isGameOver() {
     const failureConditions = [
-      { condition: (g) => (g.platform.temperature >= cfg.failureConditions.tooHot), message: "It's too hot!<br>Score: " + this.ticks },
-      { condition: (g) => (g.platform.temperature <= cfg.failureConditions.tooCold), message: "It's too cold!<br>Score: " + this.ticks },
-      { condition: (g) => (g.platform.hygiene <= cfg.failureConditions.tooDirty), message: "It's too disgusting!<br>Score: " + this.ticks },
-      { condition: (g) => (g.platform.contents.length >= g.platform.capacity), message: "Your platforms are too full!<br>Score: " + this.ticks }
+      { condition: (g: Game) => (g.platform.temperature >= cfg.failureConditions.tooHot), message: `It's too hot!<br>Score: ${this.ticks}` },
+      { condition: (g: Game) => (g.platform.temperature <= cfg.failureConditions.tooCold), message: `It's too cold!<br>Score: ${this.ticks}` },
+      { condition: (g: Game) => (g.platform.hygiene <= cfg.failureConditions.tooDirty), message: `It's too disgusting!<br>Score: ${this.ticks}` },
+      { condition: (g: Game) => (g.platform.contents.length >= g.platform.capacity), message: `Your platforms are too full!<br>Score: ${this.ticks}` }
     ];
 
     for (let index in failureConditions) {
@@ -100,12 +99,12 @@ export default class Game {
     return { gameover: false };
   }
 
-  queueAction(key, target) {
+  public queueAction(key: string) {
     if (this.queuedActions.length >= cfg.actionQueueCap) return;
-    this.queuedActions.push({ key: key, target: target })
+    this.queuedActions.push({ key: key });
   }
 
-  registerEvent(current, ablyMessage) {
-    current.platform.unprocessedMessages.push(ablyMessage);
+  registerEvent(game: Game, ablyMessage: any) {
+    game.platform.unprocessedMessages.push(ablyMessage);
   }
 }

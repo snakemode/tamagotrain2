@@ -1,6 +1,6 @@
-import { Realtime } from 'ably/promises';
+import { Realtime, Types } from 'ably/promises';
+import { nothing, TrainEventCallback } from '../types';
 import IDataSource from './IDataSource';
-const nothing = () => { };
 
 const defaultWaitTime = 12000;
 const trainIdleTimeCap = 30000;
@@ -8,7 +8,7 @@ const trainIdleTimeCap = 30000;
 export default class AblyTrainArrivalsClient implements IDataSource {
   private _timetableAgeInMs: number;
   private _client: Realtime;
-  private _callback: (message: any) => void;
+  private _callback: TrainEventCallback;
   private _pollingIntervalMs: number;
   private _channel: any;
   private _timetable: {
@@ -26,9 +26,9 @@ export default class AblyTrainArrivalsClient implements IDataSource {
     this._channel = null
   }
 
-  public async listenForEvents(id, callback) {
+  public async listenForEvents(lineId: string, callback: TrainEventCallback) {
     this._callback = callback || nothing;
-    this.subscribeToLine(id);
+    this.subscribeToLine(lineId);
     const currentClient = this;
 
     setInterval(function () {
@@ -123,23 +123,18 @@ export default class AblyTrainArrivalsClient implements IDataSource {
     return allTrains.sort((a, b) => a.TimeToStation - b.TimeToStation);
   }
 
-  private raiseMessagesFor(item, departsInMs) {
+  private raiseMessagesFor(item: Types.Message, departsInMs: number) {
 
     this._callback({
-      line: "platformId1",
       arrived: true,
       source: this.constructor.name,
-      sourceMessage: item,
       departsInMs: departsInMs
     });
 
     setTimeout(() => {
-
       this._callback({
-        line: "platformId1",
         departed: true,
-        source: this.constructor.name,
-        sourceMessage: item
+        source: this.constructor.name
       });
 
     }, departsInMs);

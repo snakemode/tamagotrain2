@@ -34,7 +34,7 @@ class GameUi {
     buttons.forEach(element => {
       const buff = element.getAttribute("data-action");
       const button = element as HTMLButtonElement;
-      button.onclick = () => game.queueAction(buff, 'platformId1');
+      button.onclick = () => game.queueAction(buff);
     });
   }
 

@@ -1,6 +1,6 @@
 import Train from "./Train";
 import { entities } from "../Config";
-import { Position } from "../types";
+import { Position, TrainEvent } from "../types";
 const cfg = entities.platform;
 
 export default class Platform {
@@ -18,7 +18,7 @@ export default class Platform {
   public contents: any[];
   public buffs: any[];
 
-  public unprocessedMessages: any[];
+  public unprocessedMessages: TrainEvent[];
 
   public spawnPoints: SpawnPoint[];
   public exits: Position[];
