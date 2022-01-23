@@ -6,8 +6,8 @@ export default class SimulatedTrainArrivalsClient {
   private _callback: any;
   private _timeout: any;
 
-  constructor(interval: number) {
-    this.interval = interval || twelveSeconds;
+  constructor(interval: number = twelveSeconds) {
+    this.interval = interval;
     this.stopped = false;
     console.log("SimulatedTrainArrivalsClient created.");
   }

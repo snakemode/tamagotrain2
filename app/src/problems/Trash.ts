@@ -1,10 +1,13 @@
 import { problems } from "../Config";
-const cfg = problems.trash;
 import Problem from "./Problem";
 import Mouse from "./Mouse";
 
-class Trash extends Problem {
-  constructor(x, y) {
+const cfg = problems.trash;
+
+export default class Trash extends Problem {
+  public spawnedMouse: boolean;
+
+  constructor(x: number, y: number) {
     super(x, y);
     this.spawnedMouse = false;
   }
@@ -27,5 +30,3 @@ class Trash extends Problem {
   onCompletion(platform) {
   }
 }
-
-export default Trash;

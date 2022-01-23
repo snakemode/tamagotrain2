@@ -1,11 +1,10 @@
 import { game } from "./Config";
-const cfg = game;
 import Platform from "./entities/Platform";
-
 import CleanBuff from "./buffs/CleanBuff";
 import MusicBuff from "./buffs/MusicBuff";
 import VentBuff from "./buffs/VentBuff";
 
+const cfg = game;
 const nothing = () => { };
 const asyncNothing = async () => { };
 
@@ -16,12 +15,23 @@ const buffs = {
 };
 
 export default class Game {
-  constructor(platformIds) {
+  public platformIds: string[];
+  public ticks: number;
+  public status: string;
+  public platforms: any[];
+  public queuedActions: any[];
+  public onGameEnd: (state: Game) => void;
+
+  private tickInterval: NodeJS.Timer;
+  gameover: { gameover: boolean; message: string; conditionId: string; } | { gameover: boolean; message?: undefined; conditionId?: undefined; };
+  gameovermsg: string;
+
+  constructor(platformIds: string[] = null) {
     this.platformIds = platformIds || ["platformId1"];
     this.init(this.platformIds);
   }
 
-  init(platformIds) {
+  public init(platformIds: string[]) {
     this.ticks = 0;
     this.status = "inactive";
     this.platforms = [];
@@ -33,7 +43,7 @@ export default class Game {
     }
   }
 
-  async start(options) {
+  public async start(options: { onGameStart: any; onGameEnd: any; }) {
     this.init(this.platformIds);
 
     const onStart = options.onGameStart || asyncNothing;
@@ -58,7 +68,7 @@ export default class Game {
 
     console.log("🕹 Game tick", this.ticks, this.status, this.queuedActions.length);
 
-    const gameOverCheck = this.isGameOver(this);
+    const gameOverCheck = this.isGameOver();
     if (gameOverCheck.gameover) {
       this.gameover = gameOverCheck;
       this.gameovermsg = gameOverCheck.message;

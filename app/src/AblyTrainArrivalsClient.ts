@@ -5,7 +5,19 @@ const defaultWaitTime = 12000;
 const trainIdleTimeCap = 30000;
 
 class AblyTrainArrivalsClient {
-  constructor(client) {
+  private _timetableAgeInMs: number;
+  private _client: Realtime;
+  private _callback: (message: any) => void;
+  private _pollingIntervalMs: number;
+  private _channel: any;
+  private _timetable: {
+    setAt: number;
+    // data: message.data
+    data: any[];
+  };
+  private _lastDispatchSetAt: number;
+
+  constructor(client: Realtime = null) {
     console.log("AblyTrainArrivalsClient created.");
     this._timetableAgeInMs = 0;
     this._client = client || new Realtime({ authUrl: '/api/ably-token-request' });

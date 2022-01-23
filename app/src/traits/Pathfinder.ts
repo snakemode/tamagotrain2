@@ -1,6 +1,7 @@
+import { Position } from "../types";
 import { rand } from "../utils";
 
-export function inTargetZone(location, target, tolerance) {
+export function inTargetZone(location: Position, target: Position, tolerance: number) {
   tolerance = tolerance || 0;
   if (location.x < target.x - tolerance) return false;
   if (location.x > target.x + tolerance) return false;
