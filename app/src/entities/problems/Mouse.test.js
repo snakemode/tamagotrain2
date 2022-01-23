@@ -1,7 +1,7 @@
 import { problems, entities } from "../Config";
 const cfg = problems.mouse;
 import Mouse from "./Mouse";
-import Platform from "../entities/Platform";
+import Platform from "./Platform";
 
 describe("Mouse", () => {
     

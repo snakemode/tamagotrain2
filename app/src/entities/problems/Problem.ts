@@ -1,12 +1,16 @@
-import Game from "../Game";
-import { ITickable } from "../traits/ITickable";
-import { uuidv4, rand } from "../utils";
+import Game from "../../Game";
+import { ITickable } from "../../traits/ITickable";
+import { IGameEntity } from "../IGameEntity";
+import { uuidv4, rand } from "../../utils";
 
-export default abstract class Problem implements ITickable {
+export default abstract class Problem implements ITickable, IGameEntity {
   public id: string;
   public ticks: number;
+
   public x: number;
   public y: number;
+  public isDisplayed: boolean;
+  public completed: boolean;
 
   constructor(x: number, y: number) {
     this.id = uuidv4();

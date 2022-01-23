@@ -20,15 +20,18 @@ async function start(useRealData = false) {
         : new SimulatedTrainArrivalsClient();
 
     game = new Game();
-    ui = new GameUi(game);
+    ui = new GameUi();
 
     game.start({
-        onGameStart: async () => await dataSource.listenForEvents("940GZZLUKSX", msg => game.registerEvent(game, msg)),
-        onGameEnd: () => dataSource.stopListening()
+        onGameStart: async () => {
+            ui.bindControls(game);
+            ui.startRendering(game, dataSource);
+            dataSource.listenForEvents("940GZZLUKSX", msg => game.registerEvent(msg));
+        },
+        onGameEnd: () => {
+            dataSource.stopListening();
+        }
     });
-
-    ui.bindControls(game);
-    ui.startRendering(game, dataSource);
 }
 
 const startButton = document.getElementById("start-with-live-data");

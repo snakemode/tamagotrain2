@@ -3,6 +3,7 @@ import { entities } from "../Config";
 import { Position, TrainEvent } from "../types";
 import { ITickable } from "../traits/ITickable";
 import Game from "../Game";
+import { IGameEntity } from "./IGameEntity";
 const cfg = entities.platform;
 
 export default class Platform implements ITickable {
@@ -16,12 +17,12 @@ export default class Platform implements ITickable {
 
   public train: Train;
   public hasTrain: boolean;
-  public contents: any[];
-  public buffs: any[];
+  public contents: IGameEntity[];
+  public buffs: ITickable[];
 
   public unprocessedMessages: TrainEvent[];
 
-  public spawnPoints: SpawnPoint[];
+  public spawnPoints: Position[];
   public exits: Position[];
 
   private get tickables(): ITickable[] {
@@ -43,13 +44,12 @@ export default class Platform implements ITickable {
 
     this.unprocessedMessages = [];
     this.spawnPoints = [
-      { x: 120, y: -25, give: 5 },
-      { x: 350, y: -25, give: 5 }
+      { x: 120, y: -25 },
+      { x: 350, y: -25 }
     ];
 
     this.exits = [
-      { x: 0, y: 180 },
-      // { x: 500,  y: 200 }
+      { x: 0, y: 180 }
     ];
   }
 
@@ -99,8 +99,4 @@ export default class Platform implements ITickable {
       }
     }
   }
-}
-
-interface SpawnPoint extends Position {
-  give: number
 }

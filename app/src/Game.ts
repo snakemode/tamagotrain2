@@ -104,7 +104,7 @@ export default class Game {
     this.queuedActions.push({ key: key });
   }
 
-  registerEvent(game: Game, ablyMessage: any) {
-    game.platform.unprocessedMessages.push(ablyMessage);
+  public registerEvent(ablyMessage: any) {
+    this.platform.unprocessedMessages.push(ablyMessage);
   }
 }

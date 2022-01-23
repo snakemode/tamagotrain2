@@ -1,4 +1,5 @@
 import { buffs } from "../Config";
+import Traveller from "../entities/Traveller";
 import Game from "../Game";
 import { ITickable } from "../traits/ITickable";
 const cfg = buffs.music;
@@ -21,7 +22,8 @@ export default class MusicBuff implements ITickable {
 
   public onCompletion(currentGameState: Game) {
     this.charmMice(currentGameState.platform);
-    for (const traveller of currentGameState.platform.contents.filter(c => c.constructor.name == "Traveller")) {
+    for (const entity of currentGameState.platform.contents.filter(c => c.constructor.name == "Traveller")) {
+      const traveller = entity as Traveller;
       traveller.isPassedOut = false;
     }
   }

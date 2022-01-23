@@ -10,3 +10,4 @@ export interface TrainEvent {
 export const nothing = async () => { };
 
 export type TrainEventCallback = (trainEvent: TrainEvent) => void;
+

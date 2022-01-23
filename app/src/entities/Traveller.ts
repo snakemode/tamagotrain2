@@ -1,24 +1,26 @@
 import { entities } from "../Config";
 import { rand, uuidv4 } from "../utils";
 import { walkNaturally } from "../traits/Pathfinder";
-import Trash from "../problems/Trash";
+import Trash from "./problems/Trash";
 import Game from "../Game";
 import { ITickable } from "../traits/ITickable";
+import { IGameEntity } from "./IGameEntity";
 
 const cfg = entities.traveller;
 
-export default class Traveller implements ITickable {
+export default class Traveller implements ITickable, IGameEntity {
   public id: string;
   public ticks: number;
   public ticksFromExit: number;
   public completed: boolean;
   public droppedTrash: boolean;
   public isPassedOut: boolean;
-  public isDisplayed: boolean;
   public dancing: boolean;
   public selectedExit: any;
+
   public x: number;
   public y: number;
+  public isDisplayed: boolean;
 
   constructor() {
     this.id = uuidv4();
@@ -46,7 +48,7 @@ export default class Traveller implements ITickable {
       platform.temperature += cfg.temperatureChangeOnCompletion;
       this.completed = true;
 
-      console.log("🚪 Traveller(id=" + this.id + ") reached exit");
+      console.log(`🚪 Traveller(id=${this.id}) reached exit`);
       return;
     }
 
@@ -72,7 +74,7 @@ export default class Traveller implements ITickable {
     // Maybe I'm going to pass out?
     if (!this.isPassedOut && platform.hygiene <= cfg.chanceOfPassingOutWhenHygieneLessThan && random <= cfg.passOutPercentageChance) {
       this.isPassedOut = true;
-      console.log("🤒 Traveller(id=" + this.id + ") passed out.");
+      console.log(`🤒 Traveller(id=${this.id}) passed out.`);
       return;
     }
   }

@@ -1,17 +1,16 @@
-import { problems } from "../Config";
-const cfg = problems.mouse;
+import { problems } from "../../Config";
 import Problem from "./Problem";
-import { inTargetZone } from "../traits/Pathfinder";
-import { walkNaturally } from "../traits/Pathfinder";
-import { Position } from "../types";
-import Game from "../Game";
-import { ITickable } from "../traits/ITickable";
+import { inTargetZone } from "../../traits/Pathfinder";
+import { walkNaturally } from "../../traits/Pathfinder";
+import { Position } from "../../types";
+import Game from "../../Game";
+
+const cfg = problems.mouse;
 
 class Mouse extends Problem {
   public stepSize: number;
   public offscreen: Position;
   public destination: Position;
-  public completed: boolean;
 
   constructor(x: number, y: number) {
     super(x, y);

@@ -1,7 +1,7 @@
-import { problems } from "../Config";
+import { problems } from "../../Config";
 import Problem from "./Problem";
 import Mouse from "./Mouse";
-import Game from "../Game";
+import Game from "../../Game";
 
 const cfg = problems.trash;
 
@@ -25,8 +25,5 @@ export default class Trash extends Problem {
       platform.contents.push(new Mouse(this.x, this.y));
       this.spawnedMouse = true;
     }
-  }
-
-  onCompletion(currentGameState: Game) {
   }
 }

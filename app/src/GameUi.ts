@@ -1,6 +1,7 @@
 import Game from "./Game";
 import { game as _game, problems } from "./Config";
 import { rand } from "./utils";
+import { IGameEntity } from "./entities/IGameEntity";
 
 const fps = _game.fps;
 const hot = problems.heat.heatOverlayDisplaysAt;
@@ -12,13 +13,13 @@ class GameUi {
 
   private _lastState: string;
   private _renderingFunctions: ((currentGameState: any, previousGameState: any) => void)[];
+  private _interval: NodeJS.Timer;
 
-  constructor(game: Game) {
+  constructor() {
     this.playfield = document.getElementById("playfield");
     this.track = document.getElementById("track");
     this.platform = document.getElementById("platform");
 
-    this._lastState = JSON.stringify(game);
     this._renderingFunctions = [
       renderLabels,
       renderGameStatus,
@@ -39,7 +40,12 @@ class GameUi {
   }
 
   public startRendering(game, dataSource) {
-    setInterval(() => this.draw(game, dataSource), 1000 / fps);
+    this._lastState = JSON.stringify(game);
+    this._interval = setInterval(() => this.draw(game, dataSource), 1000 / fps);
+  }
+
+  public stopRendering() {
+    clearInterval(this._interval);
   }
 
   private draw(g, dataSource) {
@@ -152,7 +158,7 @@ function renderPlatform(currentGameState, previousGameState) {
   }
 }
 
-function renderContents(currentGameState, previousGameState) {
+function renderContents(currentGameState: Game, previousGameState: Game) {
   const platform = currentGameState.platform;
 
   const previousPlatform = previousGameState.platform;
@@ -164,52 +170,53 @@ function renderContents(currentGameState, previousGameState) {
     document.getElementById(removedEntityId).remove();
   }
 
-  for (let [index, entity] of platform.contents.entries()) {
+  for (const entity of platform.contents) {
 
-    let gfxTarget = document.getElementById(entity.id);
+    const renderable = entity as IGameEntity;
+
+    let gfxTarget = document.getElementById(renderable.id);
 
     if (!gfxTarget) {
       gfxTarget = document.createElement("div");
 
-      gfxTarget.setAttribute('id', entity.id);
+      gfxTarget.setAttribute('id', renderable.id);
       gfxTarget.classList.add("entity");
-      gfxTarget.classList.add(entity.constructor.name.toLowerCase());
-      gfxTarget.classList.add(entity.constructor.name.toLowerCase() + Math.floor(Math.random() * 4));
-      gfxTarget.setAttribute(`data-${entity.constructor.name.toLowerCase()}-id`, entity.id);
+      gfxTarget.classList.add(renderable.constructor.name.toLowerCase());
+      gfxTarget.classList.add(renderable.constructor.name.toLowerCase() + Math.floor(Math.random() * 4));
+      gfxTarget.setAttribute(`data-${renderable.constructor.name.toLowerCase()}-id`, renderable.id);
 
       const spawnPoint = rand(0, platform.spawnPoints.length);
       const spawnPointLocation = platform.spawnPoints[spawnPoint];
-      const spawnX = spawnPointLocation.x;
 
       gfxTarget.style.position = "absolute";
 
-      if (!entity.x) {
-        entity.x = spawnX;
+      if (!renderable.x) {
+        renderable.x = spawnPointLocation.x;
       }
 
-      if (!entity.y) {
-        entity.y = spawnPointLocation.y;
+      if (!renderable.y) {
+        renderable.y = spawnPointLocation.y;
       }
 
-      entity.isDisplayed = true;
+      renderable.isDisplayed = true;
 
       this.platform.appendChild(gfxTarget);
     }
 
-    const props = Object.getOwnPropertyNames(entity);
+    const props = Object.getOwnPropertyNames(renderable);
     for (let prop of props) {
-      gfxTarget.setAttribute("data-" + prop.toLowerCase(), entity[prop]);
+      gfxTarget.setAttribute("data-" + prop.toLowerCase(), renderable[prop]);
     }
 
-    gfxTarget.setAttribute("data-x", entity.x);
-    gfxTarget.setAttribute("data-y", entity.y);
+    gfxTarget.setAttribute("data-x", renderable.x.toString());
+    gfxTarget.setAttribute("data-y", renderable.y.toString());
 
-    gfxTarget.style.left = entity.x + "px";
-    gfxTarget.style.top = entity.y + "px";
-    gfxTarget.style.zIndex = 1000 + entity.y;
+    gfxTarget.style.left = renderable.x + "px";
+    gfxTarget.style.top = renderable.y + "px";
+    gfxTarget.style.zIndex = (1000 + renderable.y).toString();
     gfxTarget.style.position = "absolute";
 
-    if (entity.constructor.name == "Trash") {
+    if (renderable.constructor.name == "Trash") {
       gfxTarget.style.zIndex = (20).toString();
     }
   }

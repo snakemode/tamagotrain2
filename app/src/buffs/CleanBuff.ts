@@ -1,6 +1,5 @@
 import { buffs } from "../Config";
 import Game from "../Game";
-import Trash from "../problems/Trash";
 import { ITickable } from "../traits/ITickable";
 const cfg = buffs.clean;
 
@@ -17,20 +16,20 @@ export default class CleanBuff implements ITickable {
   public tick(currentGameState: Game) {
     currentGameState.platform.hygiene += cfg.hygieneChangePerTick;
 
-    this.removeOneTrash(currentGameState.platform);
+    this.removeOneTrash(currentGameState);
 
     if (this.ticks == cfg.buffLengthInTicks) {
       this.completed = true;
     }
   }
 
-  private removeOneTrash(platform) {
-    const allTrash = platform.contents.filter(e => e.constructor.name === "Trash");
+  private removeOneTrash(game: Game) {
+    const allTrash = game.platform.contents.filter(e => e.constructor.name === "Trash");
     if (allTrash.length === 0) {
       return;
     }
 
-    platform.contents = platform.contents.filter((item: Trash) => item !== allTrash[0]);
+    allTrash[0].completed = true;
     console.log("Removed an item of trash 🚮");
   }
 }

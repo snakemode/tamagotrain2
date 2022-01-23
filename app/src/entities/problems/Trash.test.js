@@ -1,7 +1,7 @@
-import { problems, entities } from "../Config";
+import { problems, entities } from "../../Config";
 const cfg = problems.trash;
 import Trash from "./Trash";
-import Platform from "../entities/Platform";
+import Platform from "../Platform";
 
 describe("Mouse", () => {
     
