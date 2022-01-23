@@ -26,15 +26,7 @@ async function start(useRealData = false) {
         onGameEnd: () => dataSource.stopListening()
     });
 
-
-    const cleanit = document.getElementById("cleanit");
-    const ventit = document.getElementById("ventit");
-    const musicit = document.getElementById("musicit");
-
-    cleanit.onclick = () => game.queueAction('clean', 'platformId1');
-    ventit.onclick = () => game.queueAction('vent', 'platformId1');
-    musicit.onclick = () => game.queueAction('music', 'platformId1');
-
+    ui.bindControls(game);
     ui.startRendering(game, dataSource);
 }
 

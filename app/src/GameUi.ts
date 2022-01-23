@@ -1,5 +1,5 @@
-import { game as _game, problems } from "./Config";
 import Game from "./Game";
+import { game as _game, problems } from "./Config";
 import { rand } from "./utils";
 
 const fps = _game.fps;
@@ -29,11 +29,20 @@ class GameUi {
     ];
   }
 
-  startRendering(game, dataSource) {
+  public bindControls(game: Game) {
+    const buttons = document.querySelectorAll("[data-action]");
+    buttons.forEach(element => {
+      const buff = element.getAttribute("data-action");
+      const button = element as HTMLButtonElement;
+      button.onclick = () => game.queueAction(buff, 'platformId1');
+    });
+  }
+
+  public startRendering(game, dataSource) {
     setInterval(() => this.draw(game, dataSource), 1000 / fps);
   }
 
-  draw(g, dataSource) {
+  private draw(g, dataSource) {
     if (JSON.stringify(g) === this._lastState) {
       return; // No state has changed, do we need to re-render?
     }
@@ -54,7 +63,7 @@ class GameUi {
     this._lastState = JSON.stringify(g);
   }
 
-  resetUi() {
+  private resetUi() {
     this.platform.innerHTML = "";
   }
 }

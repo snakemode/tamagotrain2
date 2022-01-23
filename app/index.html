@@ -51,12 +51,11 @@
         </div>
         <div id="actions">
             <section class="buttons">
-                <button id="cleanit" class="button" onclick="game.queueAction('clean', 'platformId1');">clean</button>
+                <button data-action="CleanBuff" id="cleanit" class="button">clean</button>
                 <label class="label" for="cleanit">Clean</label>
-                <button id="ventit" class="button" onclick="game.queueAction('vent', 'platformId1');">vent</button>
+                <button data-action="VentBuff" id="ventit" class="button">vent</button>
                 <label class="label" for="ventit">Vent</label>
-                <button id="musicit" class="button"
-                    onclick="game.queueAction('music', 'platformId1');">something</button>
+                <button data-action="MusicBuff" id="musicit" class="button">music</button>
                 <label class="label" for="musicit">Music</label>
             </section>
         </div>

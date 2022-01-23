@@ -80,9 +80,8 @@ export default class Game {
     // handle user input actions    
     while (this.queuedActions.length > 0) {
       const action = this.queuedActions.shift();
-      const handlerName = action.key.charAt(0).toUpperCase() + action.key.slice(1) + "Buff";
       const target = this.platforms.filter(p => p.id == action.target)[0];
-      const handler = this.createBuff(handlerName);
+      const handler = this.createBuff(action.key);
       target.buffs.push(handler);
     }
 
