@@ -13,12 +13,12 @@ class GameUi {
   private _lastState: string;
   private _renderingFunctions: ((currentGameState: any, previousGameState: any) => void)[];
 
-  constructor(initialState: Game) {
+  constructor(game: Game) {
     this.playfield = document.getElementById("playfield");
     this.track = document.getElementById("track");
     this.platform = document.getElementById("platform");
 
-    this._lastState = JSON.stringify(initialState);
+    this._lastState = JSON.stringify(game);
     this._renderingFunctions = [
       renderLabels,
       renderGameStatus,

@@ -5,7 +5,7 @@ export function uuidv4() {
   });
 }
 
-export function rand(start, end) {
+export function rand(start: number, end: number) {
   return Math.floor(Math.random() * end) + start;
 }
 
