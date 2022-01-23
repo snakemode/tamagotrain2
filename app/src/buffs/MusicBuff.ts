@@ -1,26 +1,27 @@
 import { buffs } from "../Config";
+import Game from "../Game";
+import { ITickable } from "../traits/ITickable";
 const cfg = buffs.music;
 
-export default class MusicBuff {
+export default class MusicBuff implements ITickable {
   public ticks: number;
   public completed: boolean;
 
   constructor() {
     console.log("🎶 MusicBuff()");
-    this.ticks = cfg.buffLengthInTicks;
+    this.ticks = 0;
     this.completed = false;
   }
 
-  public tick(platform) {
-    this.ticks--;
-    if (this.ticks == 0) {
+  public tick(currentGameState: Game) {
+    if (this.ticks == cfg.buffLengthInTicks) {
       this.completed = true;
     }
   }
 
-  public onCompletion(platform) {
-    this.charmMice(platform);
-    for (const traveller of platform.contents.filter(c => c.constructor.name == "Traveller")) {
+  public onCompletion(currentGameState: Game) {
+    this.charmMice(currentGameState.platform);
+    for (const traveller of currentGameState.platform.contents.filter(c => c.constructor.name == "Traveller")) {
       traveller.isPassedOut = false;
     }
   }

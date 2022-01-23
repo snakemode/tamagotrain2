@@ -1,10 +1,12 @@
 import { entities, game } from "../Config";
+import Game from "../Game";
+import { ITickable } from "../traits/ITickable";
 import { uuidv4 } from "../utils";
 import Traveller from "./Traveller";
 
 const cfg = entities.train;
 
-class Train {
+class Train implements ITickable {
   public id: string;
   public ticks: number;
   public hasTicked: boolean;
@@ -29,7 +31,8 @@ class Train {
     console.log("Train will close doors at Train Tick: ", this.closeDoorsAtTick);
   }
 
-  public tick(platform) {
+  public tick(currentGameState: Game) {
+    const platform = currentGameState.platform;
 
     platform.temperature += cfg.temperatureChangePerTick;
 
@@ -47,11 +50,10 @@ class Train {
       }
     }
 
-    this.ticks++;
     this.hasTicked = true;
   }
 
-  onCompletion(platform) {
+  onCompletion(currentGameState: Game) {
   }
 }
 

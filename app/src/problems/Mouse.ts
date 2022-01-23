@@ -4,6 +4,8 @@ import Problem from "./Problem";
 import { inTargetZone } from "../traits/Pathfinder";
 import { walkNaturally } from "../traits/Pathfinder";
 import { Position } from "../types";
+import Game from "../Game";
+import { ITickable } from "../traits/ITickable";
 
 class Mouse extends Problem {
   public stepSize: number;
@@ -11,13 +13,14 @@ class Mouse extends Problem {
   public destination: Position;
   public completed: boolean;
 
-  constructor(x, y) {
+  constructor(x: number, y: number) {
     super(x, y);
     this.stepSize = cfg.stepSize;
     this.offscreen = { x: 600, y: 300 };
   }
 
-  public tick(platform) {
+  public tick(currentGameState: Game) {
+    const platform = currentGameState.platform;
 
     if (!this.destination) {
       this.destination = { x: this.random(0, platform.width), y: this.random(0, platform.height) };
@@ -35,8 +38,6 @@ class Mouse extends Problem {
     } else if (inTargetZone(this, this.destination, this.stepSize)) {
       this.destination = null;
     }
-
-    this.ticks++;
   }
 
   private leave() {

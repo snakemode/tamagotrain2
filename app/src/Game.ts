@@ -23,7 +23,7 @@ export default class Game {
   public init() {
     this.ticks = 0;
     this.status = "inactive";
-    this.platform = new Platform("1");
+    this.platform = new Platform();
     this.queuedActions = [];
     this.onGameEnd = nothing;
   }
@@ -51,7 +51,7 @@ export default class Game {
   tick() {
     this.ticks++;
 
-    console.log("🕹 Game tick", this.ticks, this.status, this.queuedActions.length);
+    console.log("🕹 Game tick", this.ticks, "Status", this.status, "Queued Actions", this.queuedActions.length);
 
     const gameOverCheck = this.isGameOver();
     if (gameOverCheck.gameover) {
@@ -69,7 +69,7 @@ export default class Game {
       this.platform.buffs.push(handler);
     }
 
-    this.platform.tick();
+    this.platform.tick(this);
 
   }
 

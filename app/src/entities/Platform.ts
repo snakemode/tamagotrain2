@@ -1,10 +1,11 @@
 import Train from "./Train";
 import { entities } from "../Config";
 import { Position, TrainEvent } from "../types";
+import { ITickable } from "../traits/ITickable";
+import Game from "../Game";
 const cfg = entities.platform;
 
-export default class Platform {
-  public id: any;
+export default class Platform implements ITickable {
   public ticks: number;
   public width: number;
   public height: number;
@@ -13,7 +14,7 @@ export default class Platform {
   public temperature: number;
   public hygiene: number;
 
-  public train: any;
+  public train: Train;
   public hasTrain: boolean;
   public contents: any[];
   public buffs: any[];
@@ -23,9 +24,11 @@ export default class Platform {
   public spawnPoints: SpawnPoint[];
   public exits: Position[];
 
-  constructor(id: string) {
-    this.id = id;
-    this.ticks = 0;
+  private get tickables(): ITickable[] {
+    return [this.train, ...this.contents, ...this.buffs].filter(x => x !== null && x["tick"]);
+  }
+
+  constructor() {
     this.width = 500;
     this.height = 200;
 
@@ -50,9 +53,28 @@ export default class Platform {
     ];
   }
 
-  public tick() {
-    this.ticks++;
+  public tick(currentGameState: Game) {
+    this.ticks = currentGameState.ticks;
 
+    this.processTrainArrivalsAndDepartures(currentGameState);
+
+    for (let item of this.tickables) {
+      item.ticks++;
+      item.tick(currentGameState);
+
+      if (item.completed) {
+        item.onCompletion?.(currentGameState);
+      }
+    }
+
+    this.buffs = this.buffs.filter(b => !b.completed);
+    this.contents = this.contents.filter(b => !b.completed);
+    this.capacity = this.capacity <= 0 ? 0 : this.capacity;
+    this.hygiene = this.hygiene <= cfg.hygieneFloor ? cfg.hygieneFloor : this.hygiene;
+    this.hygiene = this.hygiene > cfg.hygieneCap ? cfg.hygieneCap : this.hygiene;
+  }
+
+  private processTrainArrivalsAndDepartures(currentGameState: Game) {
     while (this.unprocessedMessages.length > 0) {
       const msg = this.unprocessedMessages.shift(); // FIFO
 
@@ -69,48 +91,12 @@ export default class Platform {
 
       if (msg.departed) {
         if (this.train) {
-          this.train.completed = true;
-          this.complete(this.train);
+          this.train.onCompletion(currentGameState);
         }
         this.hasTrain = false;
         this.train = null;
         console.log("🚆 Removed train.");
       }
-    }
-
-    let tickables = [this.train, ...this.contents, ...this.buffs];
-
-    // console.log("Ticking:", tickables);
-    // console.log("Ticking " + tickables.length + " items.");
-
-    for (let item of tickables) {
-      if (!item) {
-        continue;
-      }
-
-      if (item["tick"]) {
-        item.tick(this);
-      }
-
-      this.complete(item);
-    }
-
-    this.buffs = this.buffs.filter(b => !b.completed);
-    this.contents = this.contents.filter(b => !b.completed);
-    this.capacity = this.capacity <= 0 ? 0 : this.capacity;
-    this.hygiene = this.hygiene <= cfg.hygieneFloor ? cfg.hygieneFloor : this.hygiene;
-    this.hygiene = this.hygiene > cfg.hygieneCap ? cfg.hygieneCap : this.hygiene;
-  }
-
-  complete(i) {
-    if (!i.completed) {
-      return;
-    }
-
-    console.log("✅ Completed", i);
-
-    if (i["onCompletion"]) {
-      i.onCompletion(this);
     }
   }
 }

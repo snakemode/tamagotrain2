@@ -1,29 +1,26 @@
 import { buffs } from "../Config";
+import Game from "../Game";
+import { ITickable } from "../traits/ITickable";
 const cfg = buffs.clean;
 
-export default class CleanBuff {
+export default class CleanBuff implements ITickable {
   public ticks: number;
   public completed: boolean;
-  public hasTicked: boolean;
 
   constructor() {
     console.log("🧼 CleanBuff()");
-    this.ticks = cfg.buffLengthInTicks;
+    this.ticks = 0;
     this.completed = false;
-    this.hasTicked = false;
   }
 
-  tick(platform) {
-    this.ticks--;
-    platform.hygiene += cfg.hygieneChangePerTick;
+  public tick(currentGameState: Game) {
+    currentGameState.platform.hygiene += cfg.hygieneChangePerTick;
 
-    this.removeOneTrash(platform);
+    this.removeOneTrash(currentGameState.platform);
 
-    if (this.ticks == 0) {
+    if (this.ticks == cfg.buffLengthInTicks) {
       this.completed = true;
     }
-
-    this.hasTicked = true;
   }
 
   removeOneTrash(platform) {

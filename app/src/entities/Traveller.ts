@@ -2,10 +2,12 @@ import { entities } from "../Config";
 import { rand, uuidv4 } from "../utils";
 import { walkNaturally } from "../traits/Pathfinder";
 import Trash from "../problems/Trash";
+import Game from "../Game";
+import { ITickable } from "../traits/ITickable";
 
 const cfg = entities.traveller;
 
-export default class Traveller {
+export default class Traveller implements ITickable {
   public id: string;
   public ticks: number;
   public ticksFromExit: number;
@@ -32,8 +34,8 @@ export default class Traveller {
     console.log("🕺 Traveller(id=" + this.id + ")");
   }
 
-  tick(platform) {
-    this.ticks++;
+  tick(currentGameState: Game) {
+    const platform = currentGameState.platform;
 
     if (!this.selectedExit) {
       const exitIndex = rand(0, platform.exits.length);

@@ -1,6 +1,7 @@
 import { problems } from "../Config";
 import Problem from "./Problem";
 import Mouse from "./Mouse";
+import Game from "../Game";
 
 const cfg = problems.trash;
 
@@ -12,7 +13,8 @@ export default class Trash extends Problem {
     this.spawnedMouse = false;
   }
 
-  tick(platform) {
+  public tick(currentGameState: Game) {
+    const platform = currentGameState.platform;
 
     platform.hygiene += cfg.hygieneChangePerTick;
 
@@ -23,10 +25,8 @@ export default class Trash extends Problem {
       platform.contents.push(new Mouse(this.x, this.y));
       this.spawnedMouse = true;
     }
-
-    this.ticks++;
   }
 
-  onCompletion(platform) {
+  onCompletion(currentGameState: Game) {
   }
 }
