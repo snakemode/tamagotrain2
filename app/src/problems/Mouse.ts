@@ -17,7 +17,7 @@ class Mouse extends Problem {
     this.offscreen = { x: 600, y: 300 };
   }
 
-  tick(platform) {
+  public tick(platform) {
 
     if (!this.destination) {
       this.destination = { x: this.random(0, platform.width), y: this.random(0, platform.height) };
@@ -25,7 +25,7 @@ class Mouse extends Problem {
     }
 
     if (platform.hygiene >= cfg.leavesWhenHygieneIsAbove || platform.temperature <= cfg.leavesWhenTemperatureIsBelow) {
-      this.leave(platform); // Too clean or too cold! going away.
+      this.leave(); // Too clean or too cold! going away.
     }
 
     walkNaturally(this, this.destination, this.stepSize);
@@ -39,12 +39,11 @@ class Mouse extends Problem {
     this.ticks++;
   }
 
-  leave(platform, speed) {
-    this.stepSize; // BUG: This looks like a mistake.
+  private leave() {
     this.destination = this.offscreen;
   }
 
-  onCompletion(platform) {
+  public onCompletion(platform) {
     platform.hygiene += cfg.hygieneChangeWhenMouseLeaves;
   }
 }
