@@ -1,18 +1,10 @@
 import { game } from "./Config";
 import Platform from "./entities/Platform";
-import CleanBuff from "./buffs/CleanBuff";
-import MusicBuff from "./buffs/MusicBuff";
-import VentBuff from "./buffs/VentBuff";
+import buffs from "./buffs";
 
 const cfg = game;
 const nothing = () => { };
 const asyncNothing = async () => { };
-
-const buffs = {
-  CleanBuff,
-  MusicBuff,
-  VentBuff
-};
 
 export default class Game {
   public platformIds: string[];

@@ -1,13 +1,14 @@
 import Game from "./src/Game";
 import GameUi from "./src/GameUi";
-import AblyTrainArrivalsClient from "./src/AblyTrainArrivalsClient";
-import SimulatedTrainArrivalsClient from "./src/SimulatedTrainArrivalsClient";
+import AblyTrainArrivalsClient from "./src/datasources/AblyTrainArrivalsClient";
+import SimulatedTrainArrivalsClient from "./src/datasources/SimulatedTrainArrivalsClient";
+import IDataSource from "./src/datasources/IDataSource";
 
 console.log("Oh hai! 🖤");
 
 let game: Game;
 let ui: GameUi;
-let dataSource: AblyTrainArrivalsClient | SimulatedTrainArrivalsClient;
+let dataSource: IDataSource;
 
 async function start(useRealData = false) {
     if (game) {

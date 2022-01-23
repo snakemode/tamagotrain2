@@ -1,10 +1,11 @@
 import { Realtime } from 'ably/promises';
+import IDataSource from './IDataSource';
 const nothing = () => { };
 
 const defaultWaitTime = 12000;
 const trainIdleTimeCap = 30000;
 
-class AblyTrainArrivalsClient {
+export default class AblyTrainArrivalsClient implements IDataSource {
   private _timetableAgeInMs: number;
   private _client: Realtime;
   private _callback: (message: any) => void;
@@ -12,7 +13,6 @@ class AblyTrainArrivalsClient {
   private _channel: any;
   private _timetable: {
     setAt: number;
-    // data: message.data
     data: any[];
   };
   private _lastDispatchSetAt: number;
@@ -26,20 +26,23 @@ class AblyTrainArrivalsClient {
     this._channel = null
   }
 
-  async listenForEvents(id, callback) {
+  public async listenForEvents(id, callback) {
     this._callback = callback || nothing;
     this.subscribeToLine(id);
     const currentClient = this;
-    setInterval(function () { currentClient.dispatchAnyMessagesDue() }, this._pollingIntervalMs);
+
+    setInterval(function () {
+      currentClient.dispatchAnyMessagesDue()
+    }, this._pollingIntervalMs);
   }
 
-  stopListening() {
+  public stopListening() {
     if (this._channel) {
       this._channel.unsubscribe(this.timetableUpdated);
     }
   }
 
-  async subscribeToLine(id) {
+  private async subscribeToLine(id) {
     const channelId = `[product:ably-tfl/tube]tube:${id}:arrivals`;
     this._channel = await this._client.channels.get(channelId);
     await this._channel.attach();
@@ -50,7 +53,7 @@ class AblyTrainArrivalsClient {
     this._channel.subscribe(function (msg) { currentClient.timetableUpdated(msg); });
   }
 
-  timetableUpdated(message) {
+  private timetableUpdated(message) {
     const mergedTimetableData = this.mergeTrainTimetables(message);
 
     this._timetable = {
@@ -64,14 +67,12 @@ class AblyTrainArrivalsClient {
     console.log("Next train due in ", this._timetable.data[0].TimeToStation);
   }
 
-
-  dispatchAnyMessagesDue() {
+  private dispatchAnyMessagesDue() {
     this._timetableAgeInMs += this._pollingIntervalMs;
 
     if (!this._timetable) {
       return;
     }
-
 
     if (this._timetable.setAt !== this._lastDispatchSetAt) {
       console.log("Timetable updated since last dispatch");
@@ -106,11 +107,11 @@ class AblyTrainArrivalsClient {
     this._timetable.data = this._timetable.data.filter(i => !i.completed);
   }
 
-  getNextTrain(index) {
+  private getNextTrain(index) {
     return this._timetable.data[index + 1];
   }
 
-  mergeTrainTimetables(ablyResponse) {
+  private mergeTrainTimetables(ablyResponse) {
     const allLines = Object.getOwnPropertyNames(ablyResponse.data);
 
     let allTrains = [];
@@ -122,7 +123,7 @@ class AblyTrainArrivalsClient {
     return allTrains.sort((a, b) => a.TimeToStation - b.TimeToStation);
   }
 
-  raiseMessagesFor(item, departsInMs) {
+  private raiseMessagesFor(item, departsInMs) {
 
     this._callback({
       line: "platformId1",
@@ -145,5 +146,3 @@ class AblyTrainArrivalsClient {
   }
 
 }
-
-export default AblyTrainArrivalsClient;
