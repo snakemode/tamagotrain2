@@ -1,10 +1,23 @@
 import { entities } from "../Config";
-const cfg = entities.traveller;
 import { rand, uuidv4 } from "../utils";
 import { walkNaturally } from "../traits/Pathfinder";
 import Trash from "../problems/Trash";
 
+const cfg = entities.traveller;
+
 export default class Traveller {
+  public id: string;
+  public ticks: number;
+  public ticksFromExit: number;
+  public completed: boolean;
+  public droppedTrash: boolean;
+  public isPassedOut: boolean;
+  public isDisplayed: boolean;
+  public dancing: boolean;
+  public selectedExit: any;
+  public x: number;
+  public y: number;
+
   constructor() {
     this.id = uuidv4();
     this.ticks = 0;

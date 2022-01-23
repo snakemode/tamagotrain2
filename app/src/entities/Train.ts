@@ -1,9 +1,16 @@
 import { entities, game } from "../Config";
-const cfg = entities.train;
 import { uuidv4 } from "../utils";
 import Traveller from "./Traveller";
 
+const cfg = entities.train;
+
 class Train {
+  public id: string;
+  public ticks: number;
+  public hasTicked: boolean;
+  public doorState: string;
+  public closeDoorsAtTick: number;
+
   constructor() {
     this.id = uuidv4();
     this.ticks = 0;
@@ -14,7 +21,7 @@ class Train {
     console.log("🚂 Train(id=" + this.id + ")");
   }
 
-  setDepartureTimeInMs(departureTimeInMs) {
+  public setDepartureTimeInMs(departureTimeInMs: number) {
     const departureTimeInSeconds = (departureTimeInMs / 1000);
     const desiredTickForDoorClose = Math.floor(departureTimeInSeconds / game.ticksPerSecond) - 2;
     this.closeDoorsAtTick = desiredTickForDoorClose;
@@ -22,7 +29,7 @@ class Train {
     console.log("Train will close doors at Train Tick: ", this.closeDoorsAtTick);
   }
 
-  tick(platform) {
+  public tick(platform) {
 
     platform.temperature += cfg.temperatureChangePerTick;
 
