@@ -51,4 +51,4 @@ export default class SimulatedTrainArrivalsClient {
 
 }
 
-const sleep = (timeout) => new Promise(r => setTimeout(r, timeout));
+const sleep = (timeout: number) => new Promise(r => setTimeout(r, timeout));
