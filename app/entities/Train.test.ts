@@ -1,4 +1,4 @@
-import { entities } from "../../Config";
+import { entities } from "../Config";
 const cfg = entities.train;
 import Train from "./Train";
 import Platform from "./Platform";
@@ -7,7 +7,7 @@ describe("Train", () => {
     
   let train, platform;
   beforeEach(() => {
-    platform = new Platform("platformId1");
+    platform = new Platform();
     train = new Train();
   });
   

@@ -18,7 +18,7 @@ describe("Game", () => {
   });
 
   it("tick - ticks each platform", () => {
-    const platform = new Platform("some-id");
+    const platform = new Platform();
     game.platforms.push(platform);
 
     game.tick();

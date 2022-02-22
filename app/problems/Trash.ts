@@ -1,7 +1,7 @@
-import { problems } from "../../Config";
-import Problem from "./Problem";
-import Mouse from "./Mouse";
+import Problem from "../entities/problems/Problem";
+import Mouse from "../entities/problems/Mouse";
 import Game from "../Game";
+import { problems } from "../config";
 
 const cfg = problems.trash;
 
