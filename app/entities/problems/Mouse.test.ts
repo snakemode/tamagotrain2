@@ -5,7 +5,8 @@ import Game from "../../Game";
 
 describe("Mouse", () => {
 
-  let mouse, platform, game;
+  let mouse: Mouse;
+  let platform, game;
   beforeEach(() => {
     game = new Game();
     platform = game.platform;
@@ -22,7 +23,7 @@ describe("Mouse", () => {
   it("tick picks a random destination if one is not set", () => {
     delete mouse.destination;
 
-    mouse.tick(platform);
+    mouse.tick(game);
 
     expect(mouse.destination).toBeDefined();
     expect(mouse.destination).not.toBe(mouse.offscreen);
@@ -31,7 +32,7 @@ describe("Mouse", () => {
   it("tick - mice set destination to offscreen when it gets hygienic", () => {
     platform.hygiene = entities.platform.hygieneCap;
 
-    mouse.tick(platform);
+    mouse.tick(game);
 
     expect(mouse.destination).toBe(mouse.offscreen);
   });
@@ -39,7 +40,7 @@ describe("Mouse", () => {
   it("onCompletion improves hygiene", () => {
     platform.hygiene = 0;
 
-    mouse.onCompletion(platform);
+    mouse.onCompletion(game);
 
     expect(platform.hygiene).toBe(cfg.hygieneChangeWhenMouseLeaves);
   });
@@ -48,7 +49,7 @@ describe("Mouse", () => {
     platform.hygiene = entities.platform.hygieneCap;
 
     for (let i = 0; i <= 100; i++) {
-      mouse.tick(platform);
+      mouse.tick(game);
     }
 
     expect(mouse.completed).toBe(true);
@@ -59,7 +60,7 @@ describe("Mouse", () => {
     let firstDestination = null;
 
     for (let i = 0; i <= 100; i++) {
-      mouse.tick(platform);
+      mouse.tick(game);
 
       if (i == 0) {
         firstDestination = mouse.destination;

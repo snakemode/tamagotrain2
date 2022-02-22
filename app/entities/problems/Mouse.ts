@@ -43,8 +43,8 @@ class Mouse extends Problem {
     this.destination = this.offscreen;
   }
 
-  public onCompletion(platform) {
-    platform.hygiene += cfg.hygieneChangeWhenMouseLeaves;
+  public onCompletion(currentGameState: Game) {
+    currentGameState.platform.hygiene += cfg.hygieneChangeWhenMouseLeaves;
   }
 }
 
