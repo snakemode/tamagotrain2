@@ -1,5 +1,4 @@
-import { IGameEntity } from "../entities/IGameEntity";
-import { Position } from "../types";
+import { IGameEntity, Position } from "../entities/IGameEntity";
 import { rand } from "../utils";
 
 export function inTargetZone(location: Position, target: Position, tolerance: number) {
