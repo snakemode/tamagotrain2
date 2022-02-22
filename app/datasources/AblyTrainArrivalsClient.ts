@@ -50,11 +50,14 @@ export default class AblyTrainArrivalsClient implements IDataSource {
 
     const resultPage = await this._channel.history({ untilAttach: true, limit: 1 });
     this.timetableUpdated(resultPage.items[0]);
+
     const currentClient = this;
-    this._channel.subscribe(function (msg) { currentClient.timetableUpdated(msg); });
+    this._channel.subscribe(function (msg) {
+      currentClient.timetableUpdated(msg);
+    });
   }
 
-  private timetableUpdated(message) {
+  public timetableUpdated(message) {
     const mergedTimetableData = this.mergeTrainTimetables(message);
 
     this._timetable = {
@@ -113,7 +116,7 @@ export default class AblyTrainArrivalsClient implements IDataSource {
   }
 
   private mergeTrainTimetables(ablyResponse) {
-    const allLines = Object.getOwnPropertyNames(ablyResponse.data);
+    const allLines = Object.getOwnPropertyNames(ablyResponse.data).filter(x => x !== 'length');
 
     let allTrains = [];
     for (let lineName of allLines) {
@@ -129,13 +132,15 @@ export default class AblyTrainArrivalsClient implements IDataSource {
     this._callback({
       arrived: true,
       source: this.constructor.name,
-      departsInMs: departsInMs
+      departsInMs: departsInMs,
+      sourceMessage: item
     });
 
     setTimeout(() => {
       this._callback({
         departed: true,
-        source: this.constructor.name
+        source: this.constructor.name,
+        sourceMessage: item
       });
 
     }, departsInMs);

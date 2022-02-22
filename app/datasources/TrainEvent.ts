@@ -3,6 +3,7 @@ export interface TrainEvent {
     arrived?: boolean;
     departed?: boolean;
     departsInMs?: number;
+    sourceMessage?: any;
 }
 
 export type TrainEventCallback = (trainEvent: TrainEvent) => void;
