@@ -1,10 +1,11 @@
 import SimulatedTrainArrivalsClient from "./SimulatedTrainArrivalsClient";
 
-describe("SimulatedTrainArrivalsClient", async () => {
+describe("SimulatedTrainArrivalsClient", () => {
 
-    let sut, callbackInterval;
+    let sut: SimulatedTrainArrivalsClient;
+    let callbackInterval: any;
     beforeEach(() => {
-        callbackInterval = 10;
+        callbackInterval = 2;
         sut = new SimulatedTrainArrivalsClient(callbackInterval);
     });
 
@@ -18,7 +19,7 @@ describe("SimulatedTrainArrivalsClient", async () => {
 
         sut.listenForEvents("some-line-id", message => returnedMessages.push(message));
 
-        expect(returnedMessages[0]).toStrictEqual({ arrived: true, line: "platformId1", source: "SimulatedTrainArrivalsClient" });
+        expect(returnedMessages[0]).toStrictEqual({ arrived: true, source: "SimulatedTrainArrivalsClient" });
     });
 
     it("listenForEvents Simulates a message of a train leaving after a delay", async () => {
@@ -27,27 +28,29 @@ describe("SimulatedTrainArrivalsClient", async () => {
         sut.listenForEvents("some-line-id", message => returnedMessages.push(message));
         await sleep((callbackInterval) + 2);
 
-        expect(returnedMessages[1]).toStrictEqual({ departed: true, line: "platformId1", source: "SimulatedTrainArrivalsClient" });
+        expect(returnedMessages[1]).toStrictEqual({ departed: true, source: "SimulatedTrainArrivalsClient" });
     });
 
     it("listenForEvents Simulation loops if you keep it running", async () => {
         let returnedMessages = [];
+        const numberOfLoops = 5;
 
         sut.listenForEvents("some-line-id", message => returnedMessages.push(message));
-        await sleep((callbackInterval) * 5);
+        await sleep((callbackInterval) * numberOfLoops + 2);
 
-        expect(returnedMessages.length).toBe(5);
+        expect(returnedMessages.length).toBe(numberOfLoops);
     });
 
     it("stopListening Simulation can be stopped", async () => {
         let returnedMessages = [];
+        const numberOfLoops = 5;
         sut.listenForEvents("some-line-id", message => returnedMessages.push(message));
-        await sleep((callbackInterval) * 5);
+        await sleep((callbackInterval) * numberOfLoops + 5);
 
         sut.stopListening();
-        await sleep((callbackInterval) * 2); // Nothing happening here.
+        await sleep(150); // Nothing happening here.
 
-        expect(returnedMessages.length).toBe(5);
+        expect(returnedMessages.length).toBe(numberOfLoops);
     });
 });
 

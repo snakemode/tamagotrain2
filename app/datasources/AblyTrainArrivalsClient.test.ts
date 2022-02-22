@@ -1,6 +1,6 @@
 import AblyTrainArrivalsClient from "./AblyTrainArrivalsClient";
 
-describe("AblyTrainArrivalsClient", async () => {
+describe("AblyTrainArrivalsClient", () => {
 
     let sut, ably, ablyChannel;
     beforeEach(() => {

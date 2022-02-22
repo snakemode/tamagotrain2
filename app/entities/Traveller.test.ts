@@ -1,34 +1,32 @@
-import { entities } from "../../Config";
+import { entities } from "../Config";
 const cfg = entities.traveller;
 import Traveller from "./Traveller";
 import Platform from "./Platform";
 import MusicBuff from "../buffs/MusicBuff";
+import Game from "../Game";
 
 describe("Traveller", () => {
-    
-  let traveller, platform;
+
+  let game: Game;
+  let platform: Platform;
+  let traveller: Traveller;
   beforeEach(() => {
+    game = new Game();
+    platform = game.platform;
     traveller = new Traveller();
-    platform = new Platform("platformId1");
   });
-  
+
   it("can be constructed", () => {
     expect(traveller).toBeDefined();
     expect(traveller.id).toBeDefined();
     expect(traveller.ticks).toBe(0);
     expect(traveller.completed).toBe(false);
   });
-  
-  it("tick - increments tick counter", () => {
-    traveller.tick(platform);  
-
-    expect(traveller.ticks).toBe(1);
-  });
 
   it("tick - reduces distance from exit by one", () => {
     traveller.ticksFromExit = 100;
 
-    traveller.tick(platform);    
+    traveller.tick(game);
 
     expect(traveller.ticksFromExit).toBe(99);
   });
@@ -37,7 +35,7 @@ describe("Traveller", () => {
     traveller.ticksFromExit = 100;
     traveller.isPassedOut = true;
 
-    traveller.tick(platform);    
+    traveller.tick(game);
 
     expect(traveller.ticksFromExit).toBe(100);
   });
@@ -46,7 +44,7 @@ describe("Traveller", () => {
     traveller.ticksFromExit = 100;
     platform.buffs.push(new MusicBuff());
 
-    traveller.tick(platform);    
+    traveller.tick(game);
 
     expect(traveller.ticksFromExit).toBe(100);
   });
@@ -55,7 +53,7 @@ describe("Traveller", () => {
     traveller.droppedTrash = false;
     traveller.random = () => 5;
 
-    traveller.tick(platform); 
+    traveller.tick(game);
 
     expect(platform.contents[0].constructor.name).toBe("Trash");
     expect(traveller.droppedTrash).toBe(true);
@@ -64,7 +62,7 @@ describe("Traveller", () => {
   it("tick - doesn't litter 95% of the time", () => {
     traveller.random = () => 6;
 
-    traveller.tick(platform); 
+    traveller.tick(game);
 
     expect(traveller.droppedTrash).toBe(false);
   });
@@ -72,8 +70,8 @@ describe("Traveller", () => {
   it("tick - doesn't litter if they already have", () => {
     traveller.random = () => 5;
 
-    traveller.tick(platform);  // litters
-    traveller.tick(platform);  // doesn't litter
+    traveller.tick(game);  // litters
+    traveller.tick(game);  // doesn't litter
 
     expect(platform.contents.length).toBe(1); // only one trash
   });
@@ -82,7 +80,7 @@ describe("Traveller", () => {
     platform.hygiene = 30;
     traveller.random = () => 10;
 
-    traveller.tick(platform); 
+    traveller.tick(game);
 
     expect(traveller.isPassedOut).toBe(true);
   });
@@ -90,7 +88,7 @@ describe("Traveller", () => {
   it("tick - traveller is at the exit, flags as completed", () => {
     traveller.ticksFromExit = 0;
 
-    traveller.tick(platform); 
+    traveller.tick(game);
 
     expect(traveller.completed).toBe(true);
   });
@@ -99,7 +97,7 @@ describe("Traveller", () => {
     platform.temperature = 20;
     traveller.ticksFromExit = 0;
 
-    traveller.tick(platform);
+    traveller.tick(game);
 
     expect(platform.temperature).toBe(20 + cfg.temperatureChangeOnCompletion);
   });

@@ -18,70 +18,69 @@ describe("Game", () => {
   });
 
   it("tick - ticks each platform", () => {
-    const platform = new Platform();
-    game.platforms.push(platform);
+    game.platform = new Platform();
 
     game.tick();
 
-    expect(platform.ticks).toBe(1);
+    expect(game.platform.ticks).toBe(1);
   });
 
   it("tick - triggers game over when temperature too hot", () => {
-    game.platforms[0].temperature = 60;
+    game.platform.temperature = 60;
     game.tick();
     expect(game.status).toBe("ended");
   });
 
   it("tick - triggers game over when temperature too cold", () => {
-    game.platforms[0].temperature = -60;
+    game.platform.temperature = -60;
     game.tick();
     expect(game.status).toBe("ended");
   });
 
   it("tick - triggers game over when unhygienic", () => {
-    game.platforms[0].hygiene = 0;
+    game.platform.hygiene = 0;
     game.tick();
     expect(game.status).toBe("ended");
   });
 
   it("tick - triggers game over when platform is full", () => {
-    game.platforms[0].contents.push({});
-    game.platforms[0].contents.push({});
-    game.platforms[0].capacity = 1;
+    game.platform.contents.push({});
+    game.platform.contents.push({});
+    game.platform.capacity = 1;
     game.tick();
     expect(game.status).toBe("ended");
   });
 
   it("queueAction clean queues appropriate buff up", () => {
-    game.queueAction("clean", "platformId1");
+    game.queueAction("CleanBuff", "platformId1");
 
     game.tick();
 
-    expect(game.platforms[0].buffs.length).toBe(1);
-    expect(game.platforms[0].buffs[0].constructor.name).toBe("CleanBuff");
+    expect(game.platform.buffs.length).toBe(1);
+    expect(game.platform.buffs[0].constructor.name).toBe("CleanBuff");
   });
 
   it("queueAction vent queues appropriate buff up", () => {
-    game.queueAction("vent", "platformId1");
+    game.queueAction("VentBuff", "platformId1");
 
     game.tick();
 
-    expect(game.platforms[0].buffs.length).toBe(1);
-    expect(game.platforms[0].buffs[0].constructor.name).toBe("VentBuff");
+    expect(game.platform.buffs.length).toBe(1);
+    expect(game.platform.buffs[0].constructor.name).toBe("VentBuff");
   });
 
   it("queueAction music queues appropriate buff up", () => {
-    game.queueAction("music", "platformId1");
+    game.queueAction("MusicBuff", "platformId1");
 
     game.tick();
 
-    expect(game.platforms[0].buffs.length).toBe(1);
-    expect(game.platforms[0].buffs[0].constructor.name).toBe("MusicBuff");
+    expect(game.platform.buffs.length).toBe(1);
+    expect(game.platform.buffs[0].constructor.name).toBe("MusicBuff");
   });
 
   it("queueAction unknown buff, raises error", () => {
-    game.queueAction("not_a_real_buff", "platformId1");
-    expect(() => game.tick()).toThrow("Could not find handler called Not_a_real_buffBuff");
+    game.queueAction("not_a_real_buff");
+    expect(() => game.tick()).toThrow("Could not find handler called not_a_real_buff");
   });
 
   it("start updates game status", () => {

@@ -1,13 +1,14 @@
-import { problems, entities } from "../Config";
+import { problems, entities } from "../../Config";
 const cfg = problems.mouse;
 import Mouse from "./Mouse";
-import Platform from "./Platform";
+import Game from "../../Game";
 
 describe("Mouse", () => {
-    
-  let mouse, platform;
+
+  let mouse, platform, game;
   beforeEach(() => {
-    platform = new Platform("platformId1");
+    game = new Game();
+    platform = game.platform;
     platform.hygiene = 50; // Or the mice try to leave.
 
     mouse = new Mouse(100, 100);
@@ -20,7 +21,7 @@ describe("Mouse", () => {
 
   it("tick picks a random destination if one is not set", () => {
     delete mouse.destination;
-    
+
     mouse.tick(platform);
 
     expect(mouse.destination).toBeDefined();
@@ -28,8 +29,8 @@ describe("Mouse", () => {
   });
 
   it("tick - mice set destination to offscreen when it gets hygienic", () => {
-    platform.hygiene = entities.platform.hygieneCap;    
-    
+    platform.hygiene = entities.platform.hygieneCap;
+
     mouse.tick(platform);
 
     expect(mouse.destination).toBe(mouse.offscreen);
@@ -37,19 +38,19 @@ describe("Mouse", () => {
 
   it("onCompletion improves hygiene", () => {
     platform.hygiene = 0;
-    
-    mouse.onCompletion(platform);    
-    
+
+    mouse.onCompletion(platform);
+
     expect(platform.hygiene).toBe(cfg.hygieneChangeWhenMouseLeaves);
   });
 
   it("tick mice leave when platform is hygienic", () => {
     platform.hygiene = entities.platform.hygieneCap;
-    
+
     for (let i = 0; i <= 100; i++) {
       mouse.tick(platform);
-    }  
-    
+    }
+
     expect(mouse.completed).toBe(true);
   });
 
@@ -63,8 +64,8 @@ describe("Mouse", () => {
       if (i == 0) {
         firstDestination = mouse.destination;
       }
-    }  
-    
+    }
+
     expect(mouse.destination).not.toBe(firstDestination);
   });
 
