@@ -1,4 +1,12 @@
-export const game = {
+
+export interface GameConfiguration {
+  ticksPerSecond: number,
+  fps: number,
+  actionQueueCap: number,
+  failureConditions: any;
+}
+
+export const game: GameConfiguration = {
   ticksPerSecond: 1,
   fps: 30,
   actionQueueCap: 3,

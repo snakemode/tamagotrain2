@@ -1,12 +1,13 @@
-import { game } from "./Config";
+import { game, GameConfiguration } from "./Config";
 import Platform from "./entities/Platform";
-import buffs from "./buffs";
+import buffs, { createBuff } from "./buffs";
 import { ITickable } from "./traits/ITickable";
 
-const cfg = game;
 const nothing = async () => { };
 
 export default class Game {
+  public config: GameConfiguration;
+
   public ticks: number;
   public status: string;
   public platform: Platform;
@@ -18,7 +19,8 @@ export default class Game {
   public gameover: { gameover: boolean; message: string; conditionId: number; };
   public gameovermsg: string;
 
-  constructor() {
+  constructor(config: GameConfiguration = game) {
+    this.config = config;
     this.init();
   }
 
@@ -41,7 +43,7 @@ export default class Game {
 
     this.tickInterval = setInterval(() => {
       this.tick();
-    }, 1000 / cfg.ticksPerSecond);
+    }, 1000 / this.config.ticksPerSecond);
   }
 
   public stop(showGameOver = true) {
@@ -69,26 +71,18 @@ export default class Game {
     // handle user input actions    
     while (this.queuedActions.length > 0) {
       const action = this.queuedActions.shift();
-      const handler = this.createBuff(action.key);
+      const handler = createBuff(action.key);
       this.platform.buffs.push(handler);
     }
 
     this.platform.tick(this);
   }
 
-  private createBuff(name: string): ITickable {
-    try {
-      return new buffs[name]();
-    } catch (ex) {
-      throw "Could not find handler called " + name;
-    }
-  }
-
   private isGameOver() {
     const failureConditions = [
-      { condition: (g: Game) => (g.platform.temperature >= cfg.failureConditions.tooHot), message: `It's too hot!<br>Score: ${this.ticks}` },
-      { condition: (g: Game) => (g.platform.temperature <= cfg.failureConditions.tooCold), message: `It's too cold!<br>Score: ${this.ticks}` },
-      { condition: (g: Game) => (g.platform.hygiene <= cfg.failureConditions.tooDirty), message: `It's too disgusting!<br>Score: ${this.ticks}` },
+      { condition: (g: Game) => (g.platform.temperature >= this.config.failureConditions.tooHot), message: `It's too hot!<br>Score: ${this.ticks}` },
+      { condition: (g: Game) => (g.platform.temperature <= this.config.failureConditions.tooCold), message: `It's too cold!<br>Score: ${this.ticks}` },
+      { condition: (g: Game) => (g.platform.hygiene <= this.config.failureConditions.tooDirty), message: `It's too disgusting!<br>Score: ${this.ticks}` },
       { condition: (g: Game) => (g.platform.contents.length >= g.platform.capacity), message: `Your platforms are too full!<br>Score: ${this.ticks}` }
     ];
 
@@ -102,7 +96,7 @@ export default class Game {
   }
 
   public queueAction(key: string) {
-    if (this.queuedActions.length >= cfg.actionQueueCap) return;
+    if (this.queuedActions.length >= this.config.actionQueueCap) return;
     this.queuedActions.push({ key: key });
   }
 

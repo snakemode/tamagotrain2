@@ -3,7 +3,7 @@ import Platform from "./entities/Platform";
 
 describe("Game", () => {
 
-  let game;
+  let game: Game;
   beforeEach(() => {
     game = new Game();
   });
@@ -44,15 +44,15 @@ describe("Game", () => {
   });
 
   it("tick - triggers game over when platform is full", () => {
-    game.platform.contents.push({});
-    game.platform.contents.push({});
+    game.platform.contents.push({} as any);
+    game.platform.contents.push({} as any);
     game.platform.capacity = 1;
     game.tick();
     expect(game.status).toBe("ended");
   });
 
   it("queueAction clean queues appropriate buff up", () => {
-    game.queueAction("CleanBuff", "platformId1");
+    game.queueAction("CleanBuff");
 
     game.tick();
 
@@ -61,7 +61,7 @@ describe("Game", () => {
   });
 
   it("queueAction vent queues appropriate buff up", () => {
-    game.queueAction("VentBuff", "platformId1");
+    game.queueAction("VentBuff");
 
     game.tick();
 
@@ -70,7 +70,7 @@ describe("Game", () => {
   });
 
   it("queueAction music queues appropriate buff up", () => {
-    game.queueAction("MusicBuff", "platformId1");
+    game.queueAction("MusicBuff");
 
     game.tick();
 
@@ -96,10 +96,13 @@ describe("Game", () => {
   });
 
   it("start ticks game counter", async () => {
+    // Magic numbers here just make the game tick faster so tests don't take time
+    game.config.ticksPerSecond = 100;
     game.start(startOptions);
-    await sleep(1500);
 
-    expect(game.ticks).toBe(1);
+    await sleep(15);
+
+    expect(game.ticks).toBeGreaterThan(0);
     game.stop();
   });
 });

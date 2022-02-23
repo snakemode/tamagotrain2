@@ -18,10 +18,18 @@ export default class Trash extends Problem {
 
     platform.hygiene += cfg.hygieneChangePerTick;
 
-    // Spawn mouse if too trashy
-    const random = this.random();
+    if (this.spawnedMouse) {
+      // Trash can only spawn one mouse per instance.
+      return;
+    }
 
-    if (!this.spawnedMouse && platform.hygiene <= cfg.chanceOfMouseWhenLessThanHygiene && random <= cfg.chanceOfMousePercent) {
+    if (platform.hygiene > cfg.chanceOfMouseWhenLessThanHygiene) {
+      // If platform hygiene is ok, don't try to spawn mouse.
+      return;
+    }
+
+    // Roll dice to spawn mouse...
+    if (this.random() <= cfg.chanceOfMousePercent) {
       platform.contents.push(new Mouse(this.x, this.y));
       this.spawnedMouse = true;
     }
