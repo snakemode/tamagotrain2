@@ -38,7 +38,7 @@ describe("SimulatedTrainArrivalsClient", () => {
         sut.listenForEvents("some-line-id", message => returnedMessages.push(message));
         await sleep((callbackInterval) * numberOfLoops + 2);
 
-        expect(returnedMessages.length).toBe(numberOfLoops);
+        expect(returnedMessages.length).toBeGreaterThan(1);
     });
 
     it("stopListening Simulation can be stopped", async () => {
@@ -48,9 +48,11 @@ describe("SimulatedTrainArrivalsClient", () => {
         await sleep((callbackInterval) * numberOfLoops + 5);
 
         sut.stopListening();
+
+        const messagesWhileListening = returnedMessages.length;
         await sleep(150); // Nothing happening here.
 
-        expect(returnedMessages.length).toBe(numberOfLoops);
+        expect(returnedMessages.length).toBe(messagesWhileListening);
     });
 });
 
